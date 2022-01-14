@@ -42,8 +42,9 @@ def crop_image(before_crop_path, after_crop_path):
 
     if img.size[0] > img.size[1]: #가로가 길때
         img.show()
-        crop_y1 = 0
-        crop_y2 = crop_height
+        side_margin_y = (img.size[1] - crop_height)/2
+        crop_y1 = 0 + side_margin_y
+        crop_y2 = crop_height + side_margin_y
         choose = input("Crop 할 위치 지정 (Left: l, Right: r, Center: c) : ") #가로 긴 pdf 크롭 할 위치 고를 수 있게 수정
         if choose == 'c':
             crop_x1 = (img.size[0] - crop_width)/2
@@ -58,8 +59,9 @@ def crop_image(before_crop_path, after_crop_path):
             crop_x2 = img.size[0]
 
     elif img.size[0] < img.size[1]: #세로가 길때
-        crop_x1 = 0
-        crop_x2 = crop_width
+        side_margin_x = (img.size[0]-crop_width)/2
+        crop_x1 = 0 + side_margin_x
+        crop_x2 = crop_width + side_margin_x
         crop_y1 = (img.size[1] - crop_height)/2
         crop_y2 = img.size[1] - ((img.size[1] - crop_height)/2)
     new_image = img.crop((int(crop_x1), int(crop_y1), int(crop_x2), int(crop_y2)))
