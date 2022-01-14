@@ -2,6 +2,9 @@ from pdf2image import convert_from_path
 from PIL import Image
 import os
 import sys
+
+
+
 sys.path.append('./system/pdf2image')
 
 file_name = ""
@@ -10,6 +13,7 @@ file_dir = os.getcwd()+'/PDF/' #원본 pdf 경로
 file_list = os.listdir(file_dir)
 file_list = [name for name in file_list if name[0] != "."] #숨김 파일 제외
 file_list.sort()
+
 
 
 
@@ -22,7 +26,7 @@ def save_pdf_to_image(pdf_file_path, out_dir, save_name):
 
     images[0].save(out_dir+save_name+'_thumb.png', 'PNG') #저장 될 이미지 이름
 
-def crop_image(before_crop_path,after_crop_path):
+def crop_image(before_crop_path, after_crop_path):
     before_crop = before_crop_path
     after_crop = after_crop_path
     img = Image.open(before_crop)
@@ -37,9 +41,10 @@ def crop_image(before_crop_path,after_crop_path):
         crop_height = img.size[0]*(170/120) #가로를 자름
 
     if img.size[0] > img.size[1]: #가로가 길때
+        img.show()
         crop_y1 = 0
-        crop_y2 = img.size[1]
-        choose = input("Crop 할 위치 지정 (Left: l, Right: r, Center: c) : ")
+        crop_y2 = crop_height
+        choose = input("Crop 할 위치 지정 (Left: l, Right: r, Center: c) : ") #가로 긴 pdf 크롭 할 위치 고를 수 있게 수정
         if choose == 'c':
             crop_x1 = (img.size[0] - crop_width)/2
             crop_x2 = img.size[0] - ((img.size[0] - crop_width)/2)
@@ -54,7 +59,7 @@ def crop_image(before_crop_path,after_crop_path):
 
     elif img.size[0] < img.size[1]: #세로가 길때
         crop_x1 = 0
-        crop_x2 = img.size[0]
+        crop_x2 = crop_width
         crop_y1 = (img.size[1] - crop_height)/2
         crop_y2 = img.size[1] - ((img.size[1] - crop_height)/2)
     new_image = img.crop((int(crop_x1), int(crop_y1), int(crop_x2), int(crop_y2)))
@@ -67,8 +72,8 @@ def main():
         pdf_file_name = i
 
         save_name = i.split('.pdf')[0]
-        before_crop_path = os.getcwd()+'/pdf_thumb/'+save_name+'_thumb.png'
-        after_crop_path = os.getcwd()+'/crop_thumb/'+save_name+'_thumb.png'
+        before_crop_path = os.getcwd()+'/pdf_thumb/'+save_name+'_thumb.png' #크롭 전 이미지 경로
+        after_crop_path = os.getcwd()+'/crop_thumb/'+save_name+'_thumb.png' #크롭 후 저장될 경로
         
         pdf_file_path = file_dir + pdf_file_name
         out_dir = os.getcwd()+'/pdf_thumb/' #썸네일 저장 될 경로
