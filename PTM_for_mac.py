@@ -37,10 +37,21 @@ def crop_image(before_crop_path,after_crop_path):
         crop_height = img.size[0]*(170/120) #가로를 자름
 
     if img.size[0] > img.size[1]: #가로가 길때
-        crop_x1 = (img.size[0] - crop_width)/2
-        crop_x2 = img.size[0] - ((img.size[0] - crop_width)/2)
         crop_y1 = 0
         crop_y2 = img.size[1]
+        choose = input("Crop 할 위치 지정 (Left: l, Right: r, Center: c) : ")
+        if choose == 'c':
+            crop_x1 = (img.size[0] - crop_width)/2
+            crop_x2 = img.size[0] - ((img.size[0] - crop_width)/2)
+
+        elif choose == 'l':
+            crop_x1 = 0
+            crop_x2 = crop_width
+
+        elif choose == 'r':
+            crop_x1 = img.size[0] - crop_width
+            crop_x2 = img.size[0]
+
     elif img.size[0] < img.size[1]: #세로가 길때
         crop_x1 = 0
         crop_x2 = img.size[0]
