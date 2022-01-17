@@ -1,25 +1,22 @@
 from pdf2image import convert_from_path
 from PIL import Image
 import os
-import sys
 
-
-
-sys.path.append('./system/pdf2image')
 
 file_name = ""
 
-file_dir = os.getcwd()+'/PDF/' #원본 pdf 경로
-file_list = os.listdir(file_dir)
-file_list = [name for name in file_list if name[0] != "."] #숨김 파일 제외
-file_list.sort()
+
+folder_dir = os.getcwd() + '/PDF/'
+folder_list = os.listdir(folder_dir)
+folder_list = [name for name in folder_list if name[0] != "."]
+folder_list.sort()
 
 
 
 
 #이미지 저장 모듈
 def save_pdf_to_image(pdf_file_path, out_dir, save_name):
-    
+
     poppler_path =os.getcwd()+'/system/poppler/21.12.0/bin/'#맥용 모듈 추가
 
     images = convert_from_path(pdf_file_path, poppler_path=poppler_path, dpi=72) #해상도 조절하려면 dpi=300 괄호안에 입력해서 조
@@ -69,21 +66,25 @@ def crop_image(before_crop_path, after_crop_path):
 
 def main():
     save_name = ""
-    count = 1
-    for i in file_list:
-        pdf_file_name = i
+    for j in folder_list:
+        os.mkdir(os.getcwd() + '/PDF_thumb/' + j)
+        os.mkdir(os.getcwd() + '/crop_thumb/' + j)
+        file_dir = os.getcwd() + '/PDF/' + j + '/' # 원본 pdf 경로
+        file_list = os.listdir(file_dir)
+        file_list = [name for name in file_list if name[0] != "."]  # 숨김 파일 제외
+        file_list.sort()
+        for i in file_list:
+            pdf_file_name = i
+            save_name = i.split('.pdf')[0]
+            before_crop_path = os.getcwd()+'/PDF_thumb/'+ j + '/' + save_name+ '_thumb.png' #크롭 전 이미지 경로
+            after_crop_path = os.getcwd()+'/crop_thumb/'+ j + '/' + save_name+ '_thumb.png' #크롭 후 저장될 경로
 
-        save_name = i.split('.pdf')[0]
-        before_crop_path = os.getcwd()+'/pdf_thumb/'+save_name+'_thumb.png' #크롭 전 이미지 경로
-        after_crop_path = os.getcwd()+'/crop_thumb/'+save_name+'_thumb.png' #크롭 후 저장될 경로
-        
-        pdf_file_path = file_dir + pdf_file_name
-        out_dir = os.getcwd()+'/pdf_thumb/' #썸네일 저장 될 경로
-        save_pdf_to_image(pdf_file_path, out_dir, save_name)
-        crop_image(before_crop_path, after_crop_path)
-        print(count,' : '+ pdf_file_name + ' --->  Save Success')
-        count = count + 1
-    print(count-1 , '개의 PDF 변환 완료')
-    
+            pdf_file_path = file_dir + pdf_file_name
+            out_dir = os.getcwd()+'/PDF_thumb/' + j + '/' #썸네일 저장 될 경로
+            save_pdf_to_image(pdf_file_path, out_dir, save_name)
+            crop_image(before_crop_path, after_crop_path)
+            print(pdf_file_name + ' --->  Save Success')
+
+
 if __name__ == '__main__':
     main()
